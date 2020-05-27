@@ -49,7 +49,7 @@ class Board extends React.Component {
 
     return (
       <div>
-
+        <button onClick={this.props.toggle}>Set Matrix</button>
         {
           board.map((row, r) => (
             <div className='row'>

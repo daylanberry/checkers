@@ -8,8 +8,8 @@ class App extends React.Component {
     super(props)
 
     this.state = {
-      n: '',
-      show: false
+      n: 8,
+      show: true
     }
 
   }
@@ -30,22 +30,34 @@ class App extends React.Component {
 
   }
 
+  toggleMatrixSetting = () => {
+    this.setState({
+      show: false,
+      n: ''
+    })
+  }
+
 
 
   render() {
     return (
       <div className="App">
         {
-          this.state.show ? <Board n={this.state.n} /> : <form onSubmit={this.handleSubmit}>
-          <label>
-            Matrix N
-          </label>
-          <input
-            type='text'
-            value={this.state.n}
-            onChange={this.handleChange}
-          />
-          <button onClick={this.handleSubmit}>Add</button>
+          this.state.show ?
+          <Board
+            n={this.state.n}
+            toggle={this.toggleMatrixSetting}
+          /> :
+          <form onSubmit={this.handleSubmit}>
+            <label>
+              Matrix N
+            </label>
+            <input
+              type='text'
+              value={this.state.n}
+              onChange={this.handleChange}
+            />
+            <button onClick={this.handleSubmit}>Add</button>
         </form>
         }
       </div>
