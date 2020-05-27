@@ -3,19 +3,21 @@ import './Square.css'
 
 
 const Square = (props) => {
-  const { row, col, n, selectedPeice, changeSelectedPeice } = props
+  const { row, col, n, selectedPeice, changeSelectedPeice, peiceType, suggested } = props
 
   const selected = selectedPeice[0] === row && selectedPeice[1] === col ? 'selected' : ''
 
   return (
     <div
       className={'square ' + props.background}
-      onClick={() => changeSelectedPeice(row, col)}
+      onClick={() => changeSelectedPeice(peiceType.trim(), row, col)}
     >
-      {
-        row <= 1 ? <div className={'redPeice ' + selected}></div> : row >= n -2 ? <div className={'blackPeice ' + selected}></div> : null
-      }
 
+      {
+        suggested ? <div className='suggested'></div>
+        :
+        <div className={peiceType + selected}></div>
+      }
     </div>
   )
 }
