@@ -20,12 +20,6 @@ class Board extends React.Component {
     this.setBoard(this.props.n)
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.n !== this.props.n) {
-      this.setBoard(prevProps.n)
-    }
-  }
-
   setBoard = (n) => {
     var array = [];
 
@@ -37,7 +31,7 @@ class Board extends React.Component {
         } else if (row >= n - 2 && row <= n) {
           rowArr.push(['black'])
         } else {
-          rowArr.push([])
+          rowArr.push([''])
         }
       }
       array.push(rowArr)
@@ -49,6 +43,17 @@ class Board extends React.Component {
 
   }
 
+  clearSuggestions = () => {
+    return this.state.board.slice().map(row => {
+      return row.map(square => {
+        if (square[0] === 'suggested') {
+          return ['']
+        } else {
+          return square
+        }
+      })
+    });
+  }
 
 
   changeSelectedPeice = (type, row, col) => {
@@ -56,34 +61,32 @@ class Board extends React.Component {
 
     if (!type.length) return
 
-    const board = this.state.board.slice().map(row => {
-      return row.map(square => {
-        if (square[0] === 'suggested') {
-          return []
-        } else {
-          return square
-        }
-      })
-    });
+    const board = this.clearSuggestions()
 
 
     if (type === 'redPeice' && row + 1 <= board.length) {
 
       if (col - 1 >= 0) {
-        suggestions.push([row + 1, col - 1])
+        if (board[row + 1][col - 1]) {
+          if (!board[row + 1][col - 1][0].length) {
+            suggestions.push([row + 1, col - 1])
+          }
+        }
       }
 
-      if (col + 1 < board[row].length) {
+      if (col + 1 < board[row].length && !board[row + 1][col +1][0].length) {
         suggestions.push([row + 1, col + 1])
       }
     }
 
     if (type === 'blackPeice' && row - 1 >= 0) {
       if (col - 1 >= 0){
-        suggestions.push([row - 1, col -1])
+        if (!board[row - 1][col - 1][0].length) {
+          suggestions.push([row - 1, col -1])
+        }
       }
 
-      if (col + 1 < board[row].length) {
+      if (col + 1 < board[row].length && !board[row - 1][col + 1][0].length) {
         suggestions.push([row - 1, col + 1])
       }
     }
@@ -99,6 +102,18 @@ class Board extends React.Component {
       selectedPeice: [row, col],
       suggestedPeices: suggestions,
       board
+    })
+  }
+
+  movePeice = (row, col, suggestedRow, suggestedCol) => {
+    const boardCopy = this.clearSuggestions()
+
+    var toMove = boardCopy[row][col]
+    boardCopy[row][col] = ''
+    boardCopy[suggestedRow][suggestedCol] = toMove
+
+    this.setState({
+      board: boardCopy,
     })
   }
 
@@ -129,9 +144,9 @@ class Board extends React.Component {
                       col={c}
                       selectedPeice={selectedPeice}
                       changeSelectedPeice={this.changeSelectedPeice}
-                      n={this.props.n}
                       background={background}
                       suggested={suggested}
+                      movePeice={this.movePeice}
                     />
                   )
                 })
