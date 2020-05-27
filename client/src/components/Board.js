@@ -9,7 +9,8 @@ class Board extends React.Component {
     super(props)
 
     this.state = {
-      board: []
+      board: [],
+      selectedPeice: []
     }
   }
 
@@ -41,10 +42,16 @@ class Board extends React.Component {
 
   }
 
+  changeSelectedPeice = (row, col) => {
+    this.setState({
+      selectedPeice: [row, col]
+    })
+  }
+
 
   render() {
 
-    const { board } = this.state
+    const { board, selectedPeice } = this.state
 
     return (
       <div>
@@ -61,6 +68,8 @@ class Board extends React.Component {
                     <Square
                       row={r}
                       col={c}
+                      selectedPeice={selectedPeice}
+                      changeSelectedPeice={this.changeSelectedPeice}
                       n={this.props.n}
                       background={background}
                     />
