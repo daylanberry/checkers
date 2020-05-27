@@ -4,5 +4,21 @@
 }
 
 .black {
+  background-color: grey;
+}
+
+.redPeice {
+  width:72px;
+  padding-bottom: 72px;
+  background-color: red;
+  border-radius: 50%;
+  margin:0.06px;
+}
+
+.blackPeice {
+  width:72px;
+  padding-bottom: 72px;
   background-color: black;
+  border-radius: 50%;
+  margin:0.06px;
 }

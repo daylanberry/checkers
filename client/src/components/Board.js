@@ -9,7 +9,6 @@ class Board extends React.Component {
     super(props)
 
     this.state = {
-      nVal: 8,
       board: []
     }
   }
@@ -60,6 +59,9 @@ class Board extends React.Component {
 
                   return (
                     <Square
+                      row={r}
+                      col={c}
+                      n={this.props.n}
                       background={background}
                     />
                   )
