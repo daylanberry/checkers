@@ -16,8 +16,21 @@ class Board extends React.Component {
   }
 
   componentDidMount() {
-    const { nVal } = this.state
-    this.setBoard(this.props.n)
+
+    const localBoard = window.localStorage.getItem('board')
+
+    if (localBoard) {
+      this.setState({
+        board: JSON.parse(localBoard)
+      })
+    } else {
+      this.setBoard(this.props.n)
+
+    }
+
+
+
+
   }
 
   setBoard = (n) => {
@@ -79,11 +92,13 @@ class Board extends React.Component {
       }
     }
 
-    if (type === 'blackPeice' && row - 1 >= 0) {
-      if (col - 1 >= 0){
+    if (type === 'blackPeice' && row - 1 >= 0 && col - 1 >= 0) {
+
+      if (!board[row - 1][col - 1][0]) {
         if (!board[row - 1][col - 1][0].length) {
           suggestions.push([row - 1, col -1])
         }
+
       }
 
       if (col + 1 < board[row].length && !board[row - 1][col + 1][0].length) {
@@ -109,13 +124,24 @@ class Board extends React.Component {
     const boardCopy = this.clearSuggestions()
 
     var toMove = boardCopy[row][col]
-    boardCopy[row][col] = ''
+    boardCopy[row][col] = ['']
     boardCopy[suggestedRow][suggestedCol] = toMove
 
     this.setState({
       board: boardCopy,
     })
   }
+
+  saveOrResetGame = (type) => {
+    const { board } = this.state
+    if (type === 'save') {
+      window.localStorage.setItem('board', JSON.stringify(board))
+    } else {
+      this.setBoard(this.props.n)
+      window.localStorage.removeItem('board')
+    }
+  }
+
 
 
   render() {
@@ -125,6 +151,11 @@ class Board extends React.Component {
     return (
       <div>
         <button onClick={this.props.toggle}>Set Matrix</button>
+        <button
+          onClick={() => this.saveOrResetGame('save')}>
+          Save Game
+        </button>
+        <button onClick={() => this.saveOrResetGame('other')}>Reset Game</button>
         {
           board.map((row, r) => (
             <div className='row'>
